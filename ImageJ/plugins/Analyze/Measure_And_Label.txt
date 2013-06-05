@@ -1,0 +1,8 @@
+  message = 
+  "To measure and outline a selection, enable \"Add to overlay\"\n"
+  +"in Analyze>Set Mesurements and press \"m\" (Analyze>Measure).\n \n"
+  +"Use the Overlay>Remove Overlay command to remove the outlines.\n"
+  +"Set the outline color and line width using Image>Overlay>Overlay Options.\n"
+  +"Enable/disable numeric labels using Image>Overlay>Labels."
+
+  showMessage("Measure and Label", message);

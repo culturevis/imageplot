@@ -1,0 +1,60 @@
+// Measure And Set Label
+//
+// This macro measures the current selection and outlines
+// and labels it in a non-destructive overlay. Edit 'color',
+// 'fontSize' and 'lineWidth' variables to change the
+// color, font size and outline width. Add this macro
+// to ImageJ/macros/StartupMacros.txt to have it
+// automatically installed when ImageJ is launched.
+// Change the name to "Measure And Set Label [m]" 
+// to have it run when the user presses the "m" key.
+// The origina version of this macro is available as:
+// http://imagej.nih.gov/ij/macros/MeasureAndSetLabel.txt
+
+  macro "Measure And Set Label" {
+       key = "label.set";
+       colors = newArray("white", "black", "red", "yellow");
+       color = colors[0];
+       lineWidth = 1;
+       fontSize = 14;
+       addN = true;
+       settings = color+" "+lineWidth+" "+fontSize+" "+addN;
+       settings = call("ij.Prefs.get", key, settings);
+       lines = split(settings);
+       if (lines.length==4) {
+          color = lines[0];
+          lineWidth = parseInt(lines[1]);
+          fontSize = parseInt(lines[2]);
+          addN = parseInt(lines[3]);
+       }
+       if (selectionType==-1)
+          exit("Selection required");
+       Dialog.create("Set Label");
+       Dialog.addString("Label:", "");
+       Dialog.addChoice("Color:", colors, color);
+       Dialog.addNumber("Line width:", lineWidth);
+       Dialog.addNumber("Font size:", fontSize);
+       Dialog.addCheckbox("Add measurement number", addN);
+       Dialog.show();
+       label = Dialog.getString();
+       color = Dialog.getChoice();
+       lineWidth = Dialog.getNumber();
+       fontSize = Dialog.getNumber();;
+       addN = Dialog.getCheckbox();
+       run("Measure");
+       setResult("Label", nResults-1, label);
+       updateResults();
+       //setJustification("center");
+       setFont("SansSerif", fontSize);
+       run("Add Selection...", "stroke=&color width=&lineWidth");
+       getBoundingRect(x, y, width, height);
+       setColor(color);
+       if (addN)
+          label = label + " (" + nResults + ")";
+       w = getStringWidth(label);
+       Overlay.drawString(label, x+width/2-w/2, y+height/2+fontSize/2);
+       settings = color+" "+lineWidth+" "+fontSize+" "+addN;
+       call("ij.Prefs.set", key, settings);
+  }
+
+

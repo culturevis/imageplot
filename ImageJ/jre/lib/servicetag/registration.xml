@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<registration_data version="1.0">
+   <environment>
+      <hostname>pc-oates-1-403</hostname>
+      <hostId/>
+      <osName>Windows XP</osName>
+      <osVersion>5.2</osVersion>
+      <osArchitecture>amd64</osArchitecture>
+      <systemModel>Precision WorkStation T5400</systemModel>
+      <systemManufacturer>Dell Inc.</systemManufacturer>
+      <cpuManufacturer>GenuineIntel</cpuManufacturer>
+      <serialNumber>4NDQZ3J</serialNumber>
+   </environment>
+   <registry urn="urn:st:53d208e3-3900-4214-852c-3c5b43c9ed3c" version="1.0">
+      <service_tag>
+         <instance_urn>urn:st:ab00efa9-bf9e-4642-b816-ca40f72a4643</instance_urn>
+         <product_name>Java SE 6 Development Kit</product_name>
+         <product_version>1.6.0_20</product_version>
+         <product_urn>urn:uuid:b58ef9a8-5ae8-11db-a023-080020a9ed93</product_urn>
+         <product_parent_urn>urn:uuid:fdc90b21-018d-4cab-b866-612c7c119ed3</product_parent_urn>
+         <product_parent>Java Platform Standard Edition 6 (Java SE 6)</product_parent>
+         <product_defined_inst_id>id=1.6.0_20-b02 amd64,dir=C:\DOCUME~1\johannes\msysgit\src\fiji\java\win64\jdk1.6.0_20\jre</product_defined_inst_id>
+         <product_vendor>Sun Microsystems</product_vendor>
+         <platform_arch>amd64</platform_arch>
+         <timestamp>2010-06-06 16:14:38 GMT</timestamp>
+         <container>global</container>
+         <source>Windows JDK i586 installer</source>
+         <installer_uid>-1</installer_uid>
+      </service_tag>
+   </registry>
+</registration_data>

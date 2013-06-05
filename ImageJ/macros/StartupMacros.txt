@@ -1,0 +1,176 @@
+// "StartupMacros"
+// The macros and macro tools in this file ("StartupMacros.txt") are 
+// automatically installed in the Plugins>Macros submenu and
+//  in the tool bar when ImageJ starts up.
+
+//  About the drawing tools.
+//
+//  This is a set of drawing tools similar to the pencil, paintbrush
+//  and flood fill (paint bucket) tools in NIH Image. The pencil
+//  and paintbrush draw in the current foreground color. The
+//  flood fill tool fills the selected area using the foreground color.
+//  Hold down the alt key to have the pencil and paintbrush draw 
+//  using the background color or to have the flood fill tool fill 
+//  using the background color. Set the foreground and background 
+//  colors by double-clicking on the eye dropper tool.  Double-click
+//  on the pencil or paintbrush tool to set the drawing width for that tool.
+//
+// Icons contributed by Tony Collins.
+
+   // Global variables
+   var pencilWidth=1,  eraserWidth=10, leftClick=16, alt=8;
+   var brushWidth = 10; //call("ij.Prefs.get", "startup.brush", "10");
+   var floodType =  "8-connected"; //call("ij.Prefs.get", "startup.flood", "8-connected");
+
+   // The macro named "AutoRun" runs when ImageJ starts.
+   // macro "AutoRun" {
+   //    print("AutoRun");
+   // }
+
+   // The macro named "AutoRunAndHide" runs when ImageJ starts
+   // and the file containing it is not displayed when ImageJ opens it.
+   // macro "AutoRunAndHide" {}
+
+  var pmCmds = newMenu("Popup Menu",
+       newArray("Help...", "Rename...", "Duplicate...", "Original Scale", 
+       "Paste Control...", "-", "Record...", "Capture Screen ", "Monitor Memory...", 
+       "List Commands...", "Control Panel...", "Startup Macros...", "Search..."));
+
+  macro "Popup Menu" {
+      cmd = getArgument();
+      if (cmd=="Help...")
+           showMessage("About Popup Menu",
+               "To customize this menu, edit the line that starts with\n\"var pmCmds\" in ImageJ/macros/StartupMacros.txt.");
+      else
+          run(cmd);
+  }
+
+  macro "Unused Tool -" {}
+
+  //macro "Abort Macro or Plugin (or press Esc key) Action Tool - CbooP51b1f5fbbf5f1b15510T5c10X" {
+  //    setKeyDown("Esc");
+  //
+ 
+  var xx = requires138b(); // check version at install
+  function requires138b() {requires("1.38b"); return 0; }
+
+     var dCmds = newMenu("Developer Menu Tool",
+      newArray("ImageJ Website","News", "Documentation", "ImageJ Wiki", "Resources", "Macro Language", "Macros", 
+      "Macro Functions", "Startup Macros...", "Plugins", "Source Code", "Mailing List Archives", "-", "Record...", 
+      "Capture Screen ", "Monitor Memory...", "List Commands...", "Control Panel...", "Search...", "Debug Mode"));
+      
+  macro "Developer Menu Tool - C037T0b11DT7b09eTcb09v" {
+       cmd = getArgument();
+       if (cmd=="ImageJ Website")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/");
+       else if (cmd=="News")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/notes.html");
+       else if (cmd=="Documentation")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/docs/");
+       else if (cmd=="ImageJ Wiki")
+           run("URL...", "url=http://imagejdocu.tudor.lu/imagej-documentation-wiki/");
+       else if (cmd=="Resources")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/developer/");
+       else if (cmd=="Macro Language")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/developer/macro/macros.html");
+       else if (cmd=="Macros")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/macros/");
+        else if (cmd=="Macro Functions")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/developer/macro/functions.html");
+        else if (cmd=="Plugins")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/plugins/");
+        else if (cmd=="Source Code")
+           run("URL...", "url=http://rsbweb.nih.gov/ij/developer/source/");
+        else if (cmd=="Mailing List Archives")
+           run("URL...", "url=https://list.nih.gov/archives/imagej.html");
+        else if (cmd=="Debug Mode")
+           setOption("DebugMode", true);
+	 else if (cmd!="-")
+            run(cmd);
+  }
+
+  var sCmds = newMenu("Stacks Menu Tool", 
+       newArray("Add Slice", "Delete Slice", "Next Slice [>]", "Previous Slice [<]", "Set Slice...", "-",
+       "Images to Stack", "Stack to Images", "Make Montage...", "Reslice [/]...", "Z Project...",
+       "3D Project...", "Plot Z-axis Profile", "-", "Label...", "Combine...", "Concatenate...", "-",
+       "Start Animation", "Stop Animation", "Animation Options...", "-", "T1 Head (2.4M, 16-bits)"));
+  macro "Stacks Menu Tool - C037T1b11ST8b09tTcb09k" {
+      cmd = getArgument();
+      if (cmd=="Images to Stack")
+          run(cmd, " ");
+      else if (cmd!="-")
+          run(cmd);
+  }
+
+   macro "Paintbrush Tool - C037La077Ld098L6859L4a2fL2f4fL5e9bL9b98L6888L5e8dL888cC123L8a3fL8b6d" {
+        getCursorLoc(x, y, z, flags);
+        if (flags&alt!=0)
+              setColorToBackgound();
+        draw(brushWidth);
+   }
+
+   macro 'Paintbrush Tool Options...' {
+      brushWidth = getNumber("Brush Width (pixels):", brushWidth);
+      call("ij.Prefs.set", "startup.brush", brushWidth);
+  }
+
+   macro "Flood Fill Tool -C037B21P085373b75d0L4d1aL3135L4050L6166D57D77D68D09D94Da7C123Da5La9abLb6bc" {
+        setupUndo();
+        getCursorLoc(x, y, z, flags);
+        if (flags&alt!=0) setColorToBackgound();
+        floodFill(x, y, floodType);
+   }
+
+   function draw(width) {
+        setupUndo();
+        getCursorLoc(x, y, z, flags);
+        setLineWidth(width);
+        moveTo(x,y);
+        x2=-1; y2=-1;
+        while (true) {
+            getCursorLoc(x, y, z, flags);
+            if (flags&leftClick==0) exit();
+            if (x!=x2 || y!=y2)
+                lineTo(x,y);
+            x2=x; y2 =y;
+            wait(10);
+        }
+   }
+
+   function setColorToBackgound() {
+       setColor(getValue("color.background"));
+   }
+
+  macro 'Flood Fill Tool Options...' {
+      Dialog.create("Flood Fill Tool");
+      Dialog.addChoice("Flood Type:", newArray("4-connected", "8-connected"), floodType);
+      Dialog.show();
+      floodType = Dialog.getChoice();
+      call("ij.Prefs.set", "startup.flood", floodType);
+  }
+ 
+  macro "Set Drawing Color..."{ 
+      run("Color Picker..."); 
+  }
+
+  macro "-" {} //menu divider
+
+  macro "About Startup Macros..." {
+      path = getDirectory("macros")+"About Startup Macros";
+      if (!File.exists(path))
+          exit("\"About Startup Macros\" not found in ImageJ/macros/.");
+      open(path);
+  }
+
+  // This example macro demonstrates how to create a
+  // custom command with a keyboard shortcut.
+  macro "Save As JPEG... [j]" {
+     quality = call("ij.plugin.JpegWriter.getQuality");
+     quality = getNumber("JPEG quality (0-100):", quality);
+     run("Input/Output...", "jpeg="+quality);
+     saveAs("Jpeg");
+  }
+
+
+
+

@@ -1,0 +1,60 @@
+//------------------- C l i c k   C o o r d i n a t e s   T o o l  -------------------
+//
+// On each click into an image, the x, y coordinates of the point are 
+// written into the "Results" window. The point can be also marked
+// in the image (destructively). This tool can handle scaled images 
+// (also with nontrivial pixel aspect ratio). Double click on the tool
+// icon to display the options dialog box. The "Invert Y" option in 
+// Analyze>Set Measurements is supported.
+
+  var outputScaled = 1;    // report raw coordinates (pixels) if false
+  var drawPoints = 0;      // draw cross at position of click
+  var drawNumbers = 0;     // draw line number for each click
+
+  macro 'Click Coordinates Tool - C000P515335150P5a595775950D46D64P88ab0D8bDa8Pe8cc0Pc8c90D9fDbfDdf' {
+     requires("1.37e");
+     getCursorLoc(x, y, z, flags);
+     if (drawPoints || drawNumbers) setupUndo();
+     if (drawPoints) {
+        setLineWidth(1);
+        tickLength = 3;	// the "radius" of the crosses marking the points
+        drawLine(maxOf(x-tickLength,0),y, minOf(x+tickLength,getWidth()-1), y);
+        drawLine(x,maxOf(y-tickLength,0), x, minOf(y+tickLength,getHeight()-1));
+     }
+     if (drawNumbers) {
+        setFont("SansSerif",9);
+        if (drawPoints) {
+           setJustification("left");
+           xText = x + tickLength + 1;
+        } else {
+           setJustification("center");
+           xText = x + 1;
+        }
+        drawString(nResults+1, xText, y+6);
+     }
+     invertY = parseInt(call("ij.plugin.filter.Analyzer.getMeasurements"))&4096!=0;
+     if (invertY) y = getHeight() - y - 1;
+     xScale = 1;
+     yScale = 1;
+     if (outputScaled) {
+        getPixelSize(unit, pixelWidth, pixelHeight);
+     } else {
+        pixelWidth = 1;
+        pixelHeight = 1;
+     }
+     setResult("X", nResults, x*pixelWidth);
+     setResult("Y", nResults-1, y*pixelHeight);
+     updateResults();
+  }
+
+  macro 'Click Coordinates Tool Options...' {
+     requires("1.37e");
+     Dialog.create("Click Coordinates Tool Options");
+     Dialog.addCheckbox("Scaled Coordinates", outputScaled);
+     Dialog.addCheckbox("Draw Cross at Each Clicked Point", drawPoints);
+     Dialog.addCheckbox("Write Point Number at Each Clicked Point", drawNumbers);
+     Dialog.show();
+     outputScaled = Dialog.getCheckbox();
+     drawPoints = Dialog.getCheckbox();
+     drawNumbers = Dialog.getCheckbox();
+  }

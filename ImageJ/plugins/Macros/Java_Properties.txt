@@ -1,0 +1,14 @@
+// Display Java Properties
+//
+// Displays all available Java properties and their values in a table
+
+  keys = getList('java.properties');
+  title = "Java Properties";
+  t = "["+title+"]";
+  if (isOpen(title))
+     print(t, "\\Clear");
+  else
+      run("New... ", "name="+t+" type=Table width=600 height=600");
+  print(t, "\\Headings: \tKey\tValue");
+  for (i=0; i<keys.length; i++)
+      print(t, (i+1)+"\t"+keys[i]+"\t"+getInfo(keys[i]));

@@ -1,0 +1,58 @@
+// 3D Angle Tool
+//
+// Use this tool to measure angles in 3D by selecting 3 points, 
+// where the middle point is the vertex. Add it to StartupMacros.txt
+// to have it automatically installed when ImageJ starts up.
+
+var coords = newArray(9);
+var angle_index = 0;
+
+macro '3D Angle Tool - C037L0fb4L0fffLafacL9b9aD89L0011L1102L0213L1304L4233L3344L5054' {
+    getCursorLoc(x, y, z, flags);
+    getVoxelSize(vw, vh, vd, unit);
+    x*=vw; y*=vh; z*=vd;
+    coords[angle_index++] = x;
+    coords[angle_index++] = y;
+    coords[angle_index++] = z;
+    if (angle_index == 3) {
+        showStatus("selected first end point: " + x + ", " + y + ", " + z);
+        showResults(NaN);
+    } else if (angle_index == 6) {
+        showStatus("selected vertex: " + x + ", " + y + ", " + z);
+        showResults(NaN);
+    } else {
+        coords[0] -= coords[3]; 
+        coords[1] -= coords[4]; 
+        coords[2] -= coords[5]; 
+        coords[6] -= coords[3]; 
+        coords[7] -= coords[4]; 
+        coords[8] -= coords[5]; 
+		// scalar product 
+        product = coords[0] * coords[6] 
+            + coords[1] * coords[7] 
+            + coords[2] * coords[8]; 
+        length1 = sqrt(coords[0] * coords[0]
+            + coords[1] * coords[1] 
+            + coords[2] * coords[2]); 
+        length2 = sqrt(coords[6] * coords[6] 
+            + coords[7] * coords[7] 
+            + coords[8] * coords[8]); 
+        degrees = acos(product / length1 / length2) * 45 / atan(1); 
+        showStatus("3d angle is " + degrees + " degrees"); 
+        showResults(degrees);
+        angle_index = 0; 
+    }
+}
+
+function showResults(angle) {
+    row = nResults - 1;
+    if (angle_index==3) {
+        row++;
+        setResult("Label", row, "First point defined");
+    } else if (angle_index==6)
+        setResult("Label", row, "Vertex defined");
+    else
+        setResult("Label", row, "Last point defined");
+    setResult("Angle", row, angle);
+    updateResults();
+}

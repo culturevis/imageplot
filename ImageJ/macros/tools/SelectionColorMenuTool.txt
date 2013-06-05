@@ -1,0 +1,57 @@
+// Selection Color Menu Tool
+
+// This macro set adds a menu to the toolbar that allows you to
+// easily change the selection color. Also adds commands to
+// Plugins>Menus to restore the previous selection color and
+// to get the current color.
+
+// Author: Gilles Carpentier, Faculte des Sciences et
+// Technologies,  Universite Paris 12 Val de Marne, France
+
+var xx = requires138b(); // check version at install
+function requires138b() {requires("1.38b"); return 0; }
+
+var Red="", Green="", Blue="", color ="", previousColor="";
+var cCmds = newMenu("Selection Color Menu Tool",newArray("yellow","red","green","blue","magenta","cyan","orange","black","white"));
+
+macro "Selection Color Menu Tool - C1b0D85D95Da5Db5Dc5Dd5De5Df5CfffD00D01D02D03D04D06D07D08D09D0aD0bD0cD0dD0eD0fD10D11D12D13D14D16D17D18D19D1aD1bD1cD1dD1eD1fD20D21D22D23D24D26D27D28D29D2aD2bD2cD2dD2eD2fD30D31D32D33D34D36D37D38D39D3aD3bD3cD3dD3eD3fD40D41D42D43D44D46D47D48D49D4aD4bD4cD4dD4eD4fD50D51D52D53D54D56D57D58D59D5aD5bD5cD5dD5eD5fD60D61D62D63D64D66D67D68D69D6aD6bD6cD6dD6eD6fD80D81D82D83D84D86D87D88D89D8aD8bD8cD8dD8eD8fD90D91D92D93D94D96D97D98D99D9aD9bD9cD9dD9eD9fDa0Da1Da2Da3Da4Da6Da7Da8Da9DaaDabDacDadDaeDafDb0Db1Db2Db3Db4Db6Db7Db8Db9DbaDbbDbcDbdDbeDbfDc0Dc1Dc2Dc3Dc4Dc6Dc7Dc8Dc9DcaDcbDccDcdDceDcfDd0Dd1Dd2Dd3Dd4Dd6Dd7Dd8Dd9DdaDdbDdcDddDdeDdfDe0De1De2De3De4De6De7De8De9DeaDebDecDedDeeDefDf0Df1Df2Df3Df4Df6Df7Df8Df9DfaDfbDfcDfdDfeDffC03fD70D71D72D73D74D75Cf00D05D15D25D35D45D55D65Cf0eD76D77D78D79D7aD7bD7cD7dD7eD7f" {
+	cmd=getArgument();
+	previousColor= call("ij.gui.Roi.getColor");
+	run("Colors...", "selection=["+cmd+"]");
+	getSelectionColors(call("ij.gui.Roi.getColor"));
+	showStatus("Selection color is now " + getColorName(Red,Green,Blue));
+}
+
+macro "Restore Previous Selection Color" {
+	if (previousColor !="") {
+		getSelectionColors (previousColor);
+		run("Colors...", "selection=["+getColorName(Red,Green,Blue)+"]");
+		showMessage ("Previous selection color \"" + getColorName(Red,Green,Blue) + "\" has been restored");
+	} else {showMessage ("Selection Color has not been changed");
+}
+
+macro "Get Curent Selection Color" {
+	color= call("ij.gui.Roi.getColor");
+	getSelectionColors (color);
+	showMessage ("Curent selection color: "+ getColorName(Red,Green,Blue) + " \(Red="+Red+" Green="+Green+" Blue="+Blue+"\)");
+}
+
+// decodes a color in the form "java.awt.Color[r=255,g=255,b=0]"
+function getSelectionColors (color) {
+	Red = substring(color, (indexOf(color, "r=")+2), (indexOf(color, "g=")-1));
+	Green=  substring(color, (indexOf(color, "g=")+2), (indexOf(color, "b=")-1));
+	Blue=  substring(color, (indexOf(color, "b=")+2), indexOf(color, "]"));
+}
+
+function getColorName(r,g,b) {
+	if (r=="255" && g=="255" && b=="0") ColorName ="yellow";
+	if (r=="255" && g=="0" && b=="0") ColorName ="red";
+	if (r=="0" && g=="255" && b=="0") ColorName ="green";
+	if (r=="0" && g=="0" && b=="255") ColorName ="blue";
+	if (r=="255" && g=="0" && b=="255") ColorName ="magenta";
+	if (r=="0" && g=="255" && b=="255") ColorName ="cyan";
+	if (r=="255" && g=="200" && b=="0") ColorName ="orange";
+	if (r=="0" && g=="0" && b=="0") ColorName ="black";
+	if (r=="255" && g=="255" && b=="255") ColorName ="white";
+	return ColorName;
+}

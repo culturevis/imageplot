@@ -1,0 +1,16 @@
+// This macro switches to the next tool when you press F1.
+// Add it to ImageJ/macros/StartupMacros.txt and it will be
+// automatically installed when ImageJ starts.
+
+  var index = 0;
+  var tools = newArray('rectangle','elliptical','brush','polygon',
+     'freehand','line','polyline','freeline','arrow','angle','point',
+     'multipoint','wand','text','zoom','hand','dropper');
+
+  macro 'Switch Tools [f1]' {
+     requires('1.43n'); // arrow tool
+     setTool(tools[index]);
+     index++;
+     if (index==tools.length) index = 0;
+  }
+

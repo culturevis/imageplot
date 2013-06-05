@@ -1,0 +1,10 @@
+// Abort Macro Action Tool
+//
+// This macro adds a button to the tool bar that
+// can be used to abort a macro or plugin. Add it
+// to ImageJ/macros/StartupMacros.txt to have it
+// automatically installed when ImageJ is launched.
+
+  macro "Abort Macro or Plugin (or press Esc key) Action Tool - CbooP51b1f5fbbf5f1b15510T5c10X" {
+      setKeyDown("Esc");
+  }
