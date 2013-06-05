@@ -1,4 +1,4 @@
-imageplot
+ImagePlot
 =========
 <h1>What is ImagePlot</h1>
 <p>
@@ -39,4 +39,25 @@ Select the option to save visualization after each new image is added to it. The
 <h2>Customize everything.</h2>
 <p>
 Customize the appearance of data points and lines, background, axis lines, data labels, image labels, the size of images, image transparency, and pretty much everything else you can think of. We wrote ImagePlot to support both quick exploration of image sets and creation of high-res visualizations for publications and exhibitions. So we added options to control every possible aspect of visualization appearance. Visualizations created with ImagePlot have been shown in science centers, art and design museums, and art galleries, including Graphic Design Museum (Breda), Gwangju Design Biennale (Korea), and The San Diego Museum of Contemporary Art.
+</p>
+<h1>Will it work with my stuff?</h1>
+<h2>Work with images in all popular formats.</h2>
+<p>
+Color or grey scale images? JPEG or TIFF? No problem, ImagePlot can handle them all. If you images have different sizes, ImagePlot can also automatically scale them to the same size. If your images are located across multiple directories on your computer, we built in an option to handle this as well.
+</p>
+<h2>Cross-platform.</h2>
+<p>
+Run ImagePlot on Windows, Mac OS or Unix.
+</p>
+<h2>No coding required.</h2>
+<p>
+ImagePlot has a Graphical User Interface, so you don't need to program or script anything.
+</p>
+<h2>Use data created in other applications.</h2>
+<p>
+ImagePlot works with the most common data formats: a set of image files and the data about these images saved in a tab delimited text file (.txt). This makes ImagePlot compatible with lots of other applications for media cataloging, data analysis, and information visualization. You can prepare and edit data using any spreadsheet or word processor application. The data file can contain any number of rows and columns. (For example, our data file for one million manga pages had one million rows and 60 columns.)
+</p>
+<h2>Download and run ImagePlot in minutes.</h2>
+<p>
+ImagePlot is a macro which runs within the cross platform, open source image processing software ImageJ. Together these files take up under 5 MB. The full ~100MB download comes with several large sample data sets, which are helpful for getting started but not required for the software to run.
 </p>
