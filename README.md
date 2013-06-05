@@ -83,7 +83,7 @@ Option to render the visualization using a better resize algorithm (runs slower 
 
 File open error checking: if ImagePlot can't find a particular image, the filename is printed in the Log window, but rendering continues.
 
-####Directory Structure
+##Directory Structure
 -------------------
 
     |-ImageJ/ ........... ImageJ Application
