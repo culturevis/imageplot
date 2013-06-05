@@ -9,6 +9,8 @@ ImagePlot was developed by the Software Studies Initiative with support from the
 
 Existing visualization tools show data as points, lines, and bars. ImagePlot's visualizations shows the actual images in your collection. The images can be scaled to any size and organized in any order - according to their dates, content, visual characteristics, etc. Because digital video is just a set of individual still images, you can also use ImagePlot to explore patterns in films, animations, video games, and any other moving image data.
 
+![Mondrian](http://4.bp.blogspot.com/-JSZee3CkFfQ/TnKEIYp2X7I/AAAAAAAAA1w/xGcwDtksaOI/s400/Mondrian.ready.w300.h300.jpg)
+
 ####Better understand media collections and make new discoveries.
 
 Visualize image collections as timelines and scatter plots which display all images in a collection. Find images that are outliers. Discover clusters - sets of images that are similar in content or visual properties. Visualize multiple sets of images to better understand their similarities and differences. Explore patterns in existing metadata (i.e., dates, names, etc.), added annotations and keywords, or visual features (i.e., brightness, saturation, hue, shapes, etc.)
@@ -30,6 +32,8 @@ Start with point and line graphs, which allow you to quickly explore your image 
 
 Start with point and line graphs, which allow you to quickly explore your image set. Once you find an interesting pattern, re-render the plot to show the images. Go back and forth between these options as often as you like.
 
+![1 Million Manga](http://4.bp.blogspot.com/-O5qYNlM_8oI/TnKEYN-bVJI/AAAAAAAAA14/7f6QTBa5r9o/s400/Manga.1_million.pages.Xstdev.Yentropy.ready.jpg)
+
 ####Turn any visualization into an animation.
 
 Select the option to save visualization after each new image is added to it. The result is a sequence of files which can be easily turned into video (use QuickTime or any video editing application).
@@ -38,10 +42,14 @@ Select the option to save visualization after each new image is added to it. The
 
 Customize the appearance of data points and lines, background, axis lines, data labels, image labels, the size of images, image transparency, and pretty much everything else you can think of. We wrote ImagePlot to support both quick exploration of image sets and creation of high-res visualizations for publications and exhibitions. So we added options to control every possible aspect of visualization appearance. Visualizations created with ImagePlot have been shown in science centers, art and design museums, and art galleries, including Graphic Design Museum (Breda), Gwangju Design Biennale (Korea), and The San Diego Museum of Contemporary Art.
 
+![Time Magazine](http://4.bp.blogspot.com/-FPdyz_s13hs/TnKG66_cBKI/AAAAAAAAA2I/gvOfKSGGlSc/s400/Time-covers-years.ready.png)
+
 ##Will it work with my stuff?
 ####Work with images in all popular formats.
 
 Color or grey scale images? JPEG or TIFF? No problem, ImagePlot can handle them all. If you images have different sizes, ImagePlot can also automatically scale them to the same size. If your images are located across multiple directories on your computer, we built in an option to handle this as well.
+
+![Time Magazine Scatter Plot](http://4.bp.blogspot.com/-Zig5WI3RwAk/TnKE40fkLCI/AAAAAAAAA2A/mZL7NTrWayg/s400/Time-covers.w300.h300.jpg)
 
 ####Cross-platform.
 
