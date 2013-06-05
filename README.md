@@ -82,3 +82,14 @@ Option to automatically save the visualization after it have been rendered (appe
 Option to render the visualization using a better resize algorithm (runs slower but generates nicer images; the option appears in the Image Options dialog box).
 
 File open error checking: if ImagePlot can't find a particular image, the filename is printed in the Log window, but rendering continues.
+
+####Directory Structure
+-------------------
+
+    |-ImageJ/ ........... ImageJ Application
+    |-extras/ ........... Extra image analysis macro script for ImageJ
+    |-sample_files/ ........... Sample image set for getting started with ImagePlot
+    |-theory/ ........... Papers and theory on cultural analytics and data visualization
+    '-ImagePlot.txt ..... ImageJ Macro
+    '-README.txt ..... Documentation on how to get started with ImagePlot
+    '-README.md ..... release readme
