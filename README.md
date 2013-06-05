@@ -59,3 +59,18 @@ ImagePlot works with the most common data formats: a set of image files and the 
 
 ImagePlot is a macro which runs within the cross platform, open source image processing software ImageJ. Together these files take up under 5 MB. The full ~100MB download comes with several large sample data sets, which are helpful for getting started but not required for the software to run.
 
+####System requirements
+
+Hardware requirements: 2 GB RAM (4GB or more recommended for high resolution visualizations with images).
+
+Software Requirements: To use ImagePlot macro, you will first need to install the ImageJ application. ImageJ will run on Mac, Windows, or Linux. Application files for all three operating systems are included in the ImagePlot.zip download.
+
+##What's New in Version 1.1
+
+Each new visualization is given automatically generated meaningful unique filename. It includes the names of data file and the data columns used for x-axis and y-axis.
+
+Option to automatically save the visualization after it have been rendered (appears in the first application dialog box).
+
+Option to render the visualization using a better resize algorithm (runs slower but generates nicer images; the option appears in the Image Options dialog box).
+
+File open error checking: if ImagePlot can't find a particular image, the filename is printed in the Log window, but rendering continues.
