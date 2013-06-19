@@ -13,6 +13,10 @@ Analyze Reader/Writer (Guy Williams)
    File>Import>NIfTI-Analyze, File>Save As>Analyze 7.5...
    http://imagej.nih.gov/ij/plugins/nifti.html
    
+Auto Threshold and Auto Local Threshold (Gabriel Landini)
+   Image>Adjust>Auto Threshold..., Image>Adjust>Auto Local Threshold...
+   http://www.dentistry.bham.ac.uk/landinig/software/software.html
+   
 Bezier Curve Tool (Berin Martini)
    Toolbar>>Bezier Curve Tool
    http://imagej.nih.gov/ij/plugins/bezier-tool/

@@ -7,7 +7,7 @@
 // from one macro to the other. The first run of the macro is 
 // benchmarked. 
 
-// Example results, all obtained with IJ 1.31l and java 1.3.1 jre :
+// Example 300x300 results, all obtained with IJ 1.31l and java 1.3.1 jre :
 // Pentium II-350 Mhz        53.44 secs
 // Pentium III-500 Mhz       45.09 secs
 // Pentium IV-1800 Mhz       11.53 secs
@@ -18,7 +18,7 @@
 // First we define some settings about start time, drawing area, and Mandelbrot parameters.
 start = getTime();
 firstrun = 0;
-window_size = 300;
+window_size = 500;
 max_size = 4; 
 max_iterations = 32;
 // end settings 

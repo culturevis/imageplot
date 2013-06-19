@@ -17,3 +17,4 @@
       }
   }
   makePoint(xmax, ymax);
+  showStatus("Maximum at "+xmax+","+ymax

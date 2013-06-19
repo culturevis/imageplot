@@ -9,27 +9,28 @@
    h3 {font-size: 120%; margin-bottom: 0px}
    h4 {font-size: 100%; margin-bottom: 0px}
 </style>
-<title>ImageJ 1.46</title>
+<title>ImageJ 1.47</title>
 </head>
 <body>
-<h3>ImageJ 1.46</h3>
+<h3>ImageJ 1.47</h3>
 <blockquote>
-This is the 1.46 release of ImageJ. You can easily upgrade to newer letter releases (e.g., 1.47e) using
-the <i>Help&gt;Update ImageJ</i> command. The 188 page
-<a href="http://imagej.nih.gov/ij/docs/guide/user-guide.pdf">Image User Guide</a>
-(8MB PDF) has a list of the new features in this release.
-The ImageJ website is at
+This is the full release of ImageJ 1.47. Use the <i>Help&gt;Update ImageJ</i> command
+to upgrade to the latest version (e.g., 1.48e).
+Documentation (including the 188 page User Guide), Java source code, plugins, macros and
+scripts are available on the ImageJ website at
 <a href="http://imagej.nih.gov/ij/">imagej.nih.gov/ij/</a>.
+<p>
+This release includes both 32-bit ("ImageJ") and 64-bit ("ImageJ64")
+applications. "ImageJ64", which is faster and is able to use more than 2 GB of memory,
+requires a 64-bit Intel processor running OS X 10.5 or later. 
+The 32-bit version ("ImageJ") is required to run plugins and commands
+that use QuickTime (e.g., <i>File&gt;Import&gt;Using QuickTIme</i>).
+
 </blockquote>
 
 <h4>Contents of ImageJ folder:</h4>
 <blockquote>
 <dl>
-	<dt><b>ij.jar</b></dt>
-		<dd>This JAR (Java Archive) file is the platform-independent core of ImageJ. It is the
-		only file that needs to be changed to upgrade to a newer version of ImageJ. Use the
-		<i>Help&gt;Update ImageJ</i> command to download newer versions of this file.
-		</dd>
 	<dt><b>ImageJ.app</b></dt>
 		<dd>This is a 32-bit ImageJ launcher for Mac OS X. It assumes
 		that ij.jar is in the ImageJ folder.
@@ -37,12 +38,6 @@ The ImageJ website is at
 	<dt><b>ImageJ64.app</b></dt>
 		<dd>This is a 64-bit ImageJ launcher for Mac OS X. It assumes
 		that ij.jar is in the ImageJ folder.
-		</dd>
-	<dt><b>ImageJ.exe</b></dt>
-		<dd>This is the ImageJ launcher for Windows.
-		</dd>
-	<dt><b>run</b></dt>
-		<dd>This is a shell script that runs ImageJ.
 		</dd>
 	<dt><b>macros</b></dt>
 		<dd>This folder contains example macros. The StartupMacros.txt file in this 
@@ -57,8 +52,8 @@ The ImageJ website is at
 		</dd>
 	<dt><b>luts</b></dt>
 		<dd>This folder contains LUTs (LookUp Tables) that are installed at startup in the
-		<i>Image&gt;Lookup Tables</i> menu and in the "Lut" toolbar menu.
-		To open a LUT file, drag and drop it on the ImageJ window.
+		<i>Image&gt;Lookup Tables</i> menu. Use the <i>Image&gt;Color&gt;Display LUTs</i>
+		command to view all the LUTs in this menu.
 		</dd>
 </dl>
 

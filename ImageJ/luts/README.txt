@@ -1,7 +1,6 @@
-This folder contains lookup tables (LUTs). The ones with names 
-starting with an upper case letter are from the WCIF distribution 
-of ImageJ by Tony Collins. The others were distributed with the 
-NCSA PalEdit program or with NIH Image.
+This folder contains lookup tables (LUTs). They are taken from
+the MBF distribution of ImageJ by Tony Collins, from the
+NCSA PalEdit program or from NIH Image.
 
 There are numerious ways to open LUTs:
 

@@ -95,7 +95,12 @@ Requires 1.46c.
 Returns, as an array, the rank positions of <i>array</i>,
 which must contain all numbers or all strings
 (<a href="../../macros/examples/ArraySortingDemo.txt">example</a>).
-Requires 1.44k.
+<br>
+
+<a name=Array.resample></a>
+<b>Array.resample(array,len)</b> - 
+Returns an array which is linearly resampled to a different length.
+Requires 1.47j.
 <br>
 
 <a name=Array.reverse></a>
@@ -202,6 +207,14 @@ or "Results" window when you meant to close the active image. Use
 <i>run("Close")</i> to close non-image windows.
 <p>
 
+<b>close(pattern)</b><br>
+Closes all image windows whose title matches <i>pattern</i>. <i>Pattern</i> may contain the wildcard
+characters "*" (matches any character sequence) or "?" (matches any single character).
+For example, close("Histo*") could be used to dispose all histogram windows.  The front
+image remains in front if it still exists. <i>Pattern</i> is not case sensitive. Use close("\\Others")
+to close all except the front image. Requires 1.47g.
+<p>
+
 <a name=cos></a>
 <b>cos(angle)</b><br>
 Returns the cosine of an angle (in radians).
@@ -236,25 +249,25 @@ Adds a message to the dialog.</i> The message can be broken into multiple
 lines by inserting new line characters ("\n") into the string.
 <br>
 <a name=Dialog.addString></a>
-<b>Dialog.addString("Label", "Initial text")</b> -
+<b>Dialog.addString(label, initialText)</b> -
 Adds a text field to the dialog, using the specified label and initial text.
 <br>
-<b>Dialog.addString("Label", "Initial text", columns)</b> -
+<b>Dialog.addString(label, initialText, columns)</b> -
 Adds a text field to the dialog, where <i>columns</i> specifies the field 
 width in characters.
 <br>
 <a name=Dialog.addNumber></a>
-<b>Dialog.addNumber("Label", default)</b> -
+<b>Dialog.addNumber(label, default)</b> -
 Adds a numeric field to the dialog, using the specified label and default value.
 <br>
-<b>Dialog.addNumber("Label", default, decimalPlaces, columns, units)</b> -
+<b>Dialog.addNumber(label, default, decimalPlaces, columns, units)</b> -
 Adds a numeric field, using the specified label and default value. <i>DecimalPlaces</i>
 specifies the number of digits to right of decimal point, <i>columns</i> specifies the the field 
 width in characters and <i>units</i> is a string that is displayed to 
 the right of the field.
 <br>
 <a name=Dialog.addSlider></a>
-<b>Dialog.addSlider("Label", min, max, default)</b> -
+<b>Dialog.addSlider(label, min, max, default)</b> -
 Adds a slider controlled numeric field to the dialog, using the specified label,
 and min, max and default values
 (<a href="../../macros/examples/SliderDemo.txt">example</a>).
@@ -262,21 +275,28 @@ Values with decimal points are used when
 (max-min)<=5 and min, max or default
 are non-integer.
 Requires 1.45f.
-
 <br>
 <a name=Dialog.addCheckbox></a>
-<b>Dialog.addCheckbox("Label", default)</b> -
+<b>Dialog.addCheckbox(label, default)</b> -
 Adds a checkbox to the dialog, using the specified label and default state (true or false).
 <br>
 <b>Dialog.addCheckboxGroup(rows, columns, labels, defaults)</b> -
 Adds a <i>rows</i>x<i>columns</i> grid of checkboxes to the dialog, using the specified labels and default states
 (<a href="../../macros/AddCheckboxGroupDemo.txt">example</a>).
 <br>
+<a name=Dialog.addRadioButtonGroup></a>
+<b>Dialog.addRadioButtonGroup(label, items, rows, columns, default)</b> -
+Adds a group of radio buttons to the dialog, where 'label' is the group label, 'items' is
+an array containing the button labels, 'rows' and 'columns' specify the grid size, and
+'default' is the label of the default button.
+(<a href="../../macros/examples/RadioButtonDemo.txt">example</a>).
+Requires 1.47r.
+<br>
 <a name=Dialog.addChoice></a>
-<b>Dialog.addChoice("Label", items)</b> -
+<b>Dialog.addChoice(label, items)</b> -
 Adds a popup menu to the dialog, where <i>items</i> is a string array containing the menu items.
 <br>
-<b>Dialog.addChoice("Label", items, default)</b> -
+<b>Dialog.addChoice(label, items, default)</b> -
 Adds a popup menu, where <i>items</i> is a string array containing the choices
 and <i>default</i> is the default choice.
 <br>
@@ -319,6 +339,10 @@ Returns the state (true or false) of the next checkbox.
 <a name=Dialog.getChoice></a>
 <b>Dialog.getChoice()</b> -
 Returns the selected item (a string) from the next popup menu.
+<br>
+<a name=Dialog.getRadioButton></a>
+<b>Dialog.getRadioButton()</b> -
+Returns the selected item (a string) from the next radio button group.
 <br>
 
 </blockquote>
@@ -426,11 +450,24 @@ See also:
 <p>
 
 <b>eval("script", javascript)</b><br>
-Evaluates the JavaScript code contained in the string <i>javascript</i>, for example
-<i>eval("script","IJ.getInstance().setAlwaysOnTop(true);")</i>. Mac users, and users of 
-Java 1.5, must have a copy of
-<a href="../../download/tools/JavaScript.jar">JavaScript.jar</a>
-in the plugins folder.
+Evaluates the
+<a href="../javascript.html">JavaScript</a>
+code contained in the string <i>javascript</i>, for example
+<i>eval("script","IJ.getInstance().setAlwaysOnTop(true);")</i>.
+<p>
+
+<b>eval("bsh", script)</b><br>
+Evaluates the
+<a href="../../plugins/bsh/index.html">BeanShell</a>
+code contained in the string <i>script</i>.
+Requires 1.47n.
+<p>
+
+<b>eval("python", script)</b><br>
+Evaluates the
+<a href="../../plugins/jython/index.html">Python</a>
+code contained in the string <i>script</i>.
+Requires 1.47n.
 <p>
 
 <a name=exec></a>
@@ -453,6 +490,7 @@ Returns the exponential number e (i.e., 2.718...) raised to the power of <i>n</i
 <p>
 
 <a name=ext></a>
+<a name=Ext></a>
 <b>Ext (Macro Extension) Functions</b><br>
 These are functions that have been added to the macro language by plugins using
 the MacroExtension interface. The
@@ -485,6 +523,12 @@ Appends <i>string</i> to the end of the specified file.
 <a name=File.close></a>
 <b>File.close(f)</b> - 
 Closes the specified file, which must have been opened using File.open().
+<br>
+
+<a name=File.copy></a>
+<b>File.copy(path1, path2)</b> - 
+Copies a file.
+Requires 1.47j.
 <br>
 
 <a name=File.dateLastModified></a>
@@ -760,9 +804,9 @@ Replace by <a href="#getSelectionBounds">getSelectionBounds</a>.
 <b>getCursorLoc(x, y, z, modifiers)</b><br>
 Returns the cursor location in pixels and the mouse event modifier flags.
 The <i>z</i> coordinate is zero for 2D images. For stacks, it is one less than the 
-slice number. For examples, see the
+slice number. Use <a href="#toScaled">toScaled(x,y)</a> to scale the coordinates.
+For examples, see the
 <a href="../../macros//GetCursorLocDemo.txt">GetCursorLocDemo</a>  and the
-
 <a href="../../macros/tools/GetCursorLocDemoTool.txt">GetCursorLocDemoTool</a> macros.
 <p>
 
@@ -876,18 +920,24 @@ See also: <a href="#getMetadata">getMetadata</a>.
 
 <a name=getInfo></a>
 <a name=font-name></a>
+<b>getInfo("command.name")</b><br>
+Returns the name of the most recently invoked command. The names of commands invoked
+using keyboard shortcuts are preceded by "^"
+(<a href="../../macros/examples/GetCommandNameDemo.txt">example</a>).
+<p>
 
-<a name=getInfo></a>
 <b>getInfo("font.name")</b><br>
 Returns the name of the current font.
-Requires 1.43f.
 <p>
 
 <b>getInfo(DICOM_TAG)</b><br>
 Returns the value of a DICOM tag in the form "xxxx,xxxx",
 e.g. getInfo("0008,0060"). Returns an empty string if
 the current image is not a DICOM or if the tag was not found.
-Requires 1.43k.
+<p>
+
+<b>getInfo("font.name")</b><br>
+Returns the name of the current font.
 <p>
 
 <b>getInfo("image.description")</b><br>
@@ -899,13 +949,11 @@ available.
 <b>getInfo("image.directory")</b><br>
 Returns the directory that the current image was loaded
 from, or an empty string if the directory is not available.
-Requires 1.43h.
 <p>
 
 <b>getInfo("image.filename")</b><br>
 Returns the name of the file that the current image was loaded
 from, or an empty string if the file name is not available.
-Requires 1.43h.
 <p>
 
 <b>getInfo("image.subtitle")</b><br>
@@ -913,25 +961,33 @@ Returns the subtitle of the current image. This is the line of
 information displayed above the image and below the title bar.
 <p>
 
+<b>getInfo("log")</b><br>
+Returns the contents of the Log window,
+or "" if the Log window is not open. Requires 1.44l.
+<p>
+
+
 <b>getInfo("micrometer.abbreviation")</b><br>
 Returns "&micro;m", the abbreviation for micrometer.
-Requires 1.43d.
+<p>
+
+<b>getInfo("os.name")</b><br>
+Returns the OS name ("Mac OS X", "Linux" or "Windows").
 <p>
 
 <b>getInfo("overlay")</b><br>
 Returns information about the current image's overlay.
-Requires 1.43r.
-<p>
-
-<b>getInfo("log")</b><br>
-Returns the contents of the Log window,
-or "" if the Log window is not open. Requires 1.44l.
 <p>
 
 <b>getInfo("selection.name")</b><br>
 Returns the name of the current selection, or "" if there is no selection
 or the selection does not have a name. The argument can also be
 "roi.name".
+<p>
+
+<b>getInfo("selection.color")</b><br>
+Returns the color of the current selection.
+Requires 1.47a.
 <p>
 
 <a name=getInfo-label></a>
@@ -1002,6 +1058,13 @@ See also:
 <b>getList("threshold.methods")</b><br>
 Returns a list of the available automatic thresholding methods
 (<a HREF="../../macros/examples/AutoThresholdingDemo.txt">example</a>).
+<p>
+
+<a name=getList-luts></a>
+<b>getList("LUTs")</b><br>
+Returns, as an array, a list of the LUTs in the <i>Image&gt;Lookup Tables</i> menu
+(<a HREF="../../macros/Time-Lapse_Color_Coder.txt">example</a>).
+Requires 1.47r.
 <p>
 
 <a name=getLocationAndSize></a>
@@ -1107,9 +1170,17 @@ nResults-1 (the last row in the results table).
 See also: 
 <a href="#nResults">nResults</a>,
 <a href="#setResult">setResult</a>,
-
 <a href="#isNaN">isNaN</a>,
 <a href="#getResultLabel">getResultLabel</a>. 
+<p>
+
+<a name=getResultString></a>
+<b>getResultString("Column", row)</b><br>
+Returns a string from the ImageJ results table or "null" if the
+specified column is not found. The first 
+argument specifies a column in the table.
+The second specifies the row, where 0&lt;=<i>row</i>&lt;nResults.
+Requires 1.47o.
 <p>
 
 <a name=getResultLabel></a>
@@ -1206,25 +1277,43 @@ Returns the title of the current image.
 <a name=getValue></a>
 <a name=get-foreground></a>
 <b>getValue("color.foreground")</b><br>
-Returns the integer value of the current foregound color
-(<a href="../../macros/examples/ForegroundBackgroundColors.txt">example</a>).
+Returns the current foreground color as a value that can be passed to
+the <a href="#setColor">setColor(value)</a> function. 
 <p>
 
 <a name=get-background></a>
 <b>getValue("color.background")</b><br>
-Returns the integer value of the current background color.
+Returns the current background color as a value that can be passed to
+the <a href="#setColor">setColor(value)</a> function. 
+<p>
+
+<a name=get-foreground></a>
+<b>getValue("rgb.foreground")</b><br>
+Returns the current foregound color as an RGB pixel value
+(<a href="../../macros/examples/ForegroundBackgroundColors.txt">example</a>).
+Requires 1.47g.
+<p>
+
+<a name=get-background></a>
+<b>getValue("rgb.background")</b><br>
+Returns the current backgound color as an RGB pixel value.
+Requires 1.47g.
 <p>
 
 <a name=font-size></a>
 <b>getValue("font.size")</b><br>
 Returns the size, in points, of the current font.
-Requires 1.43f.
 <p>
 
 <a name=font-height></a>
 <b>getValue("font.height")</b><br>
 Returns the height, in pixels, of the current font.
-Requires 1.43f.
+<p>
+
+<a name=selection-width></a>
+<b>getValue("selection.width")</b><br>
+Returns the stroke width of the current selection.
+Requires 1.47a.
 <p>
 
 <a name=getVoxelSize></a>
@@ -1391,7 +1480,7 @@ Requires 1.46i.
 <p>
 
 <b>is("Inverting LUT")</b><br>
-Returns <i>true</i> if the current image is using an inverting lookup table.
+Returns <i>true</i> if the current image is using an inverting (monotonically decreasing) lookup table.
 <p>
 
 <b>is("locked")</b><br>
@@ -1513,7 +1602,7 @@ macro for an example.
 <a name=List.setCommands></a>
 <b>List.setCommands</b> - 
 Loads the ImageJ menu commands (as keys) and the plugins that
-implement them (as values). Requires v1.43f. <br>
+implement them (as values).<br>
 
 </blockquote>
 
@@ -1576,7 +1665,6 @@ coordinate system is the upper left corner of the image.
 
 <b>makeRectangle(x, y, width, height, arcSize)</b><br>
 Creates a rounded rectangular selection using the specified corner arc size. 
-Requires 1.43n.
 <p>
 
 <a name=makeSelection></a>
@@ -1598,7 +1686,6 @@ the last call to <a href="#setFont">setFont()</a>.
 The
 <a href="../../macros/examples/CreateOverlay.txt">CreateOverlay</a>
 macro provides an example.
-Requires 1.43h.
 <p>
 
 <a name=matches></a>
@@ -1749,7 +1836,11 @@ overlay without updating the display.
 <b>Overlay.setPosition(n)</b><br>
 Sets the stack position (slice number) of the last item added to the overlay
 (<a href="../../macros/examples/StackOverlay.txt">example</a>).
-Requires 1.45d.
+<br>
+
+<b>Overlay.setPosition(c, z, t)</b><br>
+Sets the hyperstack position (channel, slice, frame) of the last item added to the overlay.
+Requires 1.47n.
 <br>
 
 <a name=Overlay.drawRect></a>
@@ -1798,6 +1889,36 @@ Removes the current overlay.
 Returns the size (selection count) of the current overlay. Returns zero if the image does not have an overlay.
 <br>
 
+<a name=Overlay.addSelection></a>
+<b>Overlay.addSelection</b><br>
+Adds the current selection to the overlay.
+Requires v1.47i.
+<br>
+
+<b>Overlay.addSelection(strokeColor)</b><br>
+Sets the stroke color ("red", "green", "ff8800", etc.) of the current selection
+and adds it to the overlay.
+Requires v1.47j.
+<br>
+
+<b>Overlay.addSelection(strokeColor, strokeWidth)</b><br>
+Sets the stroke color ("blue", "yellow", "ffaa77" etc.) and stroke width of the 
+current selection and adds it to the overlay.
+Requires v1.47j.
+<br>
+
+<b>Overlay.addSelection("", 0, fillColor)</b><br>
+Sets the fill color ("red", "green", etc.) of the current selection
+and adds it to the overlay.
+Requires v1.47j.
+<br>
+
+<a name=Overlay.activateSelection></a>
+<b>Overlay.activateSelection(index)</b><br>
+Activates the specified overlay selection.
+Requires v1.47i.
+<br>
+
 <a name=Overlay.removeSelection></a>
 <b>Overlay.removeSelection(index)</b><br>
 Removes the specified selection from the overlay.
@@ -1811,6 +1932,11 @@ Copies the overlay on the current image to the overlay clipboard. Requires 1.45e
 <a name=Overlay.paste></a>
 <b>Overlay.paste</b><br>
 Copies the overlay on the overlay clipboard to the current image. Requires 1.45e.
+<br>
+
+<a name=Overlay.drawLabels></a>
+<b>Overlay.drawLabels(boolean)</b><br>
+Enables/disables overlay labels. Requires 1.47n.
 <br>
 
 </blockquote>
@@ -1856,7 +1982,9 @@ as the X values. It is also permissible to specify no arrays and use <i>Plot.set
 Use <i>Plot.show()</i> to display the plot in a window or it will be displayed automatically when
 the macro exits.
 For examples, check out the
-<a href="../../macros/ExamplePlots.txt">ExamplePlots</a> macro file.
+<a href="../../macros/ExamplePlots.txt">ExamplePlots</a> 
+<a href="../../macros/examples/AdvancedPlots.txt">AdvancedPlots</a>
+macro files.
 <p>
 
 <a name=Plot.setLimits></a>
@@ -1882,7 +2010,7 @@ is the last one drawn before the plot is dispayed or updated.<p>
 Specifies the color used in subsequent calls to <i>Plot.add()</i> or <i>Plot.addText()</i>. 
 The argument can be
 "black", "blue", "cyan", "darkGray", "gray", "green", "lightGray", 
-"magenta", "orange", "pink", "red", "white" or "yellow".  
+"magenta", "orange", "pink", "red", "white", "yellow", or a hex value like "#ff0000".  
 Note that the curve specified in <i>Plot.create()</i> is drawn last.
 <p>
 
@@ -2085,7 +2213,7 @@ macros.
 
 <b>roiManager(cmd, name)</b><br>
 Runs an ROI Manager I/O command, where <i>cmd</i> is
-"Open", "Save or "Rename", and <i>name</i> is a file path or name. 
+"Open", "Save", "Save Selected" or "Rename", and <i>name</i> is a file path or name. 
 The "Save" option ignores selections and
 saves all the ROIs as a ZIP archive. 
 It displays a file save dialog if <i>name</i> is "".
@@ -2253,8 +2381,14 @@ macro.
 <b>setBackgroundColor(r, g, b)</b><br>
 Sets the background color, where <i>r</i>, <i>g</i>, and <i>b</i> are &gt;= 0 and &lt;= 255.
 See also:
-<a href="#setForegroundColor">setForegroundColor</a> and
-<a href="#get-background">getValue("color.background")</a>.
+<a href="#setForegroundColor">setForegroundColor</a>.
+<p>
+
+<b>setBackgroundColor(rgb)</b><br>
+Sets the background color, where <i>rgb</i> is an RGB pixel value.
+See also:
+<a href="#get-background">getValue("rgb.background")</a>.
+Requires 1.47g.
 <p>
 
 <a name=setBatchMode></a>
@@ -2295,6 +2429,13 @@ constants (e.g., 0xff0000 for red). This function does not change the foreground
 by <i>run("Draw")</i> and <i>run("Fill")</i>.
 <p>
 
+<b>setColor(string)</b><br>
+Sets the drawing color, where 'string' can be 
+"black", "blue", "cyan", "darkGray", "gray", "green", "lightGray", 
+"magenta", "orange", "pink", "red", "white", "yellow", or a hex value like "#ff0000".  
+<p>
+
+
 <a name=setFont></a>
 <b>setFont(name, size[, style])</b><br>
 Sets the font used by the <a href="#drawString">drawString</a> function.
@@ -2312,16 +2453,21 @@ See also:
 <a href="#font-name">getInfo("font.name")</a>,
 <a href="#font-size">getValue("font.size")</a> and
 <a href="#font-height">getValue("font.height")</a>.
-Requires 1.43f.
 <p>
 
 <a name=setForegroundColor></a>
 <b>setForegroundColor(r, g, b)</b><br>
 Sets the foreground color, where <i>r</i>, <i>g</i>, and <i>b</i> are &gt;= 0 and &lt;= 255.
 See also: 
-<a href="#setColor">setColor</a>,
-<a href="#setBackgroundColor">setBackgroundColor</a> and
-<a href="#get-foreground">getValue("color.foreground")</a>,
+<a href="#setColor">setColor</a> and
+<a href="#setBackgroundColor">setBackgroundColor</a>.
+<p>
+
+<b>setForegroundColor(rgb)</b><br>
+Sets the foreground color, where <i>rgb</i> is an RGB pixel value.
+See also: 
+<a href="#get-foreground">getValue("rgb.foreground")</a>.
+Requires 1.47g.
 <p>
 
 <a name=setJustification></a>
@@ -2415,16 +2561,44 @@ do not have a LUT for each channel.
 Enables or disables an ImageJ option, where <i>option</i> is one of the following options
 and <i>boolean</i> is either <i>true</i> or <i>false</i>.
  <blockquote>
-<i> "DisablePopupMenu"</i> enables/disables the the menu displayed when
-you right click on an image.
+<i>"AutoContrast"</i> enables/disables the <i>Edit&gt;Options&gt;Appearance</i>
+"Auto contrast stacks" option. You can also have newly displayed stack slices contrast
+enhanced by holding the shift key down when navigating stacks.
 <p>
- <i>"Show All"</i> enables/disables the the "Show All" mode in the ROI Manager.
+<i>"Bicubic"</i> provides a way to force commands like <i>Edit&gt;Selection&gt;Straighten</i>, that normally use
+bilinear interpolation, to use bicubic interpolation.
+<p>
+<i>"BlackBackground"</i> enables/disables the <i>Process&gt;Binary&gt;Options</i>
+"Black background" option.
  <p>
 <i>"Changes"</i> sets/resets the 'changes' flag of the current image. Set this option <i>false</i> to
 avoid  "Save Changes?" dialog boxes when closing images.
 <p>
 <i>"DebugMode"</i> enables/disables the ImageJ debug mode. ImageJ displays information, such
 as TIFF tag values, when it is in debug mode.
+ <p>
+<i> "DisablePopupMenu"</i> enables/disables the the menu displayed when
+you right click on an image.
+   <p>
+  <i>"DisableUndo"</i> enables/disables the <i>Edit&gt;Undo</i> command. Note
+  that a <i>setOption("DisableUndo",true)</i> call without a corresponding <i>setOption("DisableUndo",false)</i> will cause 
+  <i>Edit&gt;Undo</i> to not work as expected until ImageJ is restarted.
+<p>
+  <i>"Display Label"</i>, <i>"Limit to Threshold"</i>, <i>"Area"</i>,
+  <i>"Mean"</i> and <i>"Std"</i> and <i>"Stack Position"</i> (requires 1.46r),
+  enable/disable the corresponding <i>Analyze&gt;Set Measurements</i> options.
+<p>
+ <i>"ExpandableArrays"</i> enables/disables support for auto-expanding arrays
+  (<a href="../../macros/examples/ExpandableArrays.txt">example</a>).
+  Note that macros that use auto-expanding arrays will not be compatible with Image 2.0.
+ Requires v1.45s.
+ <p>
+ <i>"JFileChooser"</i> enables/disables use of the Java JFileChooser to open and save files
+ instead of the native OS file chooser.
+ Requires v1.47d.
+ <p>
+ <i>"Loop"</i> enables/disables the <i>Image&gt;Stacks&gt;Tools&gt;Animation Options</i> "Loop back and forth" option.
+ Requires v1.44n.
  <p>
  <i>"OpenUsingPlugins"</i>
  controls whether standard file types (TIFF, JPEG, GIF, etc.) are opened by external
@@ -2435,37 +2609,15 @@ as TIFF tag values, when it is in debug mode.
  run sequentially on the event dispatch thread (EDT) or in separate, possibly concurrent, threads
   (<a href="../../macros/DodgeBurnAndSmooth.txt">example</a>). 
   In "QueueMacros" mode, screen updates, which also run on the EDT, are delayed until the macro finishes.
-  Note that "QueueMacros" does not work with macros
-  using function key shortcuts in ImageJ 1.41g and earlier.
-  <p>
-  <i>"DisableUndo"</i> enables/disables the <i>Edit&gt;Undo</i> command. Note
-  that a <i>setOption("DisableUndo",true)</i> call without a corresponding <i>setOption("DisableUndo",false)</i> will cause 
-  <i>Edit&gt;Undo</i> to not work as expected until ImageJ is restarted.
-<p>
-  <i>"Display Label"</i>, <i>"Limit to Threshold"</i>, <i>"Area"</i>,
-  <i>"Mean"</i> and <i>"Std"</i>, added in v1.41,
-  enable/disable the corresponding <i>Analyze&gt;Set Measurements</i> options.
  <p>
+ <i>"Show All"</i> enables/disables the the "Show All" mode in the ROI Manager.
+<p>
 <i>"ShowMin"</i> determines whether or not  the "Min" value is displayed in the Results window
 when "Min & Max Gray Value" is enabled in the <i>Analyze&gt;Set Measurements</i> dialog box.
- <p>
-<i>"BlackBackground"</i> enables/disables the <i>Process&gt;Binary&gt;Options</i>
-"Black background" option.
- <p>
-<i>"Bicubic"</i> provides a way to force commands like <i>Edit&gt;Selection&gt;Straighten</i>, that normally use
-bilinear interpolation, to use bicubic interpolation.
- <p>
- <i>"Loop"</i> enables/disables the <i>Image&gt;Stacks&gt;Tools&gt;Animation Options</i> "Loop back and forth" option.
- Requires v1.44n.
 <p>
  <i>"ShowRowNumbers"</i> enables/disables display of Results table row numbers
   (<a href="../../macros/SineCosineTable.txt">example</a>). 
  Requires v1.45o.
-<p>
- <i>"ExpandableArrays"</i> enables/disables support for auto-expanding arrays
-  (<a href="../../macros/examples/ExpandableArrays.txt">example</a>).
-  Note that macros that use auto-expanding arrays will not be compatible with Image 2.0.
- Requires v1.45s.
 
 </blockquote>
 
@@ -2489,8 +2641,10 @@ updated when the macro exits or call updateDisplay() to have it updated immediat
 Adds an entry to the ImageJ results table or modifies an existing entry. The first 
 argument specifies a column in the table. If the specified column does not exist, it is added.
 The second argument specifies the row, where 0&lt;=<i>row</i>&lt;=nResults.
-(<i>nResults</i> is a predefined variable.) A row is added to the table if <i>row</i>=<i>nResults</i>. The third argument is the value to 
-be added or modified. Call <i>setResult("Label", row, string)</i> to set the row label. 
+(<i>nResults</i> is a predefined variable.) A row is added to the table if <i>row</i>=<i>nResults</i>.
+The third argument is the value to be added or modified.
+With v1.47o or later, it can be a string.
+Call <i>setResult("Label", row, string)</i> to set the row label. 
 Call <i>updateResults()</i> to display the updated table in the "Results" window.
 For examples, see the
 <a href="../../macros/SineCosineTable.txt">SineCosineTable</a> and
@@ -2586,7 +2740,7 @@ tool set.
 <a name=setVoxelSize></a>
 <b>setVoxelSize(width, height, depth, unit)</b><br>
 Defines the voxel dimensions and unit of length ("pixel", "mm", etc.) for the current 
-image or stack. A "um" unit will be converted to "&micro;m" (requires v1.43).
+image or stack. A "um" unit will be converted to "&micro;m".
 The <i>depth</i> argument is ignored if the current image is not a stack.
 See also: <a href="#getVoxelSize">getVoxelSize</a>.
 <p>
@@ -2652,8 +2806,7 @@ For examples, see the
 Breaks a string into an array of substrings. <i>Delimiters</i> is a string containing 
 one or more delimiter characters. The default delimiter set " \t\n\r" (space, tab, newline, return) 
 is used if <i>delimiters</i> is an empty string or split is called with only one argument. 
-Returns a one element array if no delimiter 
-is found.
+Returns a zero element array if no delimiter is found.
 <p>
 
 <a name=sqrt></a>
@@ -2771,7 +2924,6 @@ For example, "101" causes channels 1 and 3 to be displayed.
 Returns a string that represents the state of the channels
 in a composite color image, where '1' indicates a displayed
 channel and '0' indicates an inactive channel.
-Requires v1.43d.
 <br>
 
 <a name=Stack.swap></a>
@@ -2837,7 +2989,8 @@ Copies <i>str</i> to the clipboard.
 
 <a name=String.copyResults></a>
 <b>String.copyResults</b> - 
-Copies the Results table to the clipboard.
+Copies the Results table, or selected rows in the Results
+table (1.47i or later), to the clipboard.
 <br>
 
 <a name=String.getResultsHeadings></a>
@@ -2995,7 +3148,7 @@ in the dialog box.
 
 <p class=navbar> <a href="functions.html">top</a> | <a href="../../index.html">home</a> | <a href="../../notes.html">news</a> | <a href="../../docs/index.html">docs</a> | <a href="../../download.html">download</a> | <a href="../../plugins/index.html">plugins</a> | <a href="../index.html">resources</a> | <a href="../../list.html">list</a> | <a href="../../links.html">links</a></p>
 
-<small>Last updated 2012/03/15</small>
+<small>Last updated 2013/05/27</small>
 
 </body>
 </html>

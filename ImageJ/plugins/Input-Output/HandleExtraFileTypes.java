@@ -220,6 +220,15 @@ public class HandleExtraFileTypes extends ImagePlus implements PlugIn {
 			return tryPlugIn("org.doube.bonej.pqct.Read_Stratec_File", path);
 		}
 
+		//Michael Doube: read Scanco ISQ files
+		//File name is ADDDDDDD.ISQ;D where D is a decimal and A is a letter
+		try {
+			String isqMagic=new String(buf,0,16,"UTF-8");
+			if (name.matches("[a-z]\\d{7}.isq;\\d+") || isqMagic.equals("CTDATA-HEADER_V1"))
+				return tryPlugIn("org.bonej.io.ISQReader", path);
+			}
+		catch (Exception e) {}
+
 		// ****************** MODIFY HERE ******************
 		// do what ever you have to do to recognise your own file type
 		// and then call appropriate plugin using the above as models
