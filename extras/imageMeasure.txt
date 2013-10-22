@@ -58,22 +58,22 @@ for (i=0; i<list.length; i++) {
 		selectWindow("Brightness");
 		//rename(list[i] + "/brightness");
 		run("Measure");
-		brightness_median= getResult("Median", i*3);
-		brightness_stdev = getResult("StdDev", i*3);
+		brightness_median= getResult("Median");
+		brightness_stdev = getResult("StdDev");
 		close(); // close the active image - "Brightness")
 
 		selectWindow("Saturation");
 		//rename(list[i] + "/saturation");
 		run("Measure");
-		saturation_median = getResult("Median", i*3 + 1);
-		saturation_stdev = getResult("StdDev", i*3 + 1);
+		saturation_median = getResult("Median");
+		saturation_stdev = getResult("StdDev");
 		close(); // close the active image - "Saturation")
 
 		selectWindow("Hue");
 		//rename(list[i] + "/hue");
 		run("Measure");
-		hue_median = getResult("Median", i*3 + 2);
-		hue_stdev = getResult("StdDev", i*3 + 2);
+		hue_median = getResult("Median");
+		hue_stdev = getResult("StdDev");
 		close(); // close the active image - "Hue")
 
 		
