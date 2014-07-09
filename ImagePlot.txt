@@ -1,4 +1,4 @@
-/* ImagePlot 1.1 (November, 2012)
+/* ImagePlot 2 (February, 2014)
  *
  * Visualize collections of images.
  *
@@ -48,14 +48,15 @@ requires("1.46");
 // variables: flags
 
 var              GUI_mode = 1;     // (1) GUI menus, (0) use default variables
+var            polar_flag = 1;     // enables polar graph
 
 var           images_flag = 1;     // draw images on top of dots (1) or no images (0)
 var      image_paths_flag = 0;     // image data has full paths;
 var           config_flag = 0;     // view configuration subdialog menu
-var    images_config_flag = 0;     // configure images
+var    images_config_flag = 1;     // configure images
 var    images_frames_flag = 0;     // draw image frames
 var           points_flag = 0;     // draw dots; if set to 0, and images_flag set to 1, only images are drawn
-var    points_config_flag = 1;     // configure points
+var    points_config_flag = 0;     // configure points
 var            lines_flag = 0;     // draw lines
 var     lines_config_flag = 0;     // configure lines
 var     images_blend_flag = 0;     // blend mode copying of images (1) or not (0)
@@ -66,7 +67,7 @@ var    points_values_flag = 0;     // draw values next to dot
 var    points_series_flag = 0;     // draw value in column 4 (e.g. artist name, category, etc.) next to dot
 var           axis_x_flag = 0;     // draw axis lines x
 var           axis_y_flag = 0;     // draw axis lines y
-var      axis_config_flag = 1;     // configure axis
+var      axis_config_flag = 0;     // configure axis
 var    labels_config_flag = 0;     // configure labels
 var     range_config_flag = 0;     // configure range
 var         x_labels_flag = 0;     // draw labels for X axis (1) or not (0)
@@ -93,7 +94,7 @@ var dir_thumbs = "";
 
 var data_file = "Open...";
 // load previous data file from ij.Prefs
-var data_file_prev = call("ij.Prefs.get", "imagePlot.data_file_prev","");	
+var data_file_prev = call("ij.Prefs.get", "imagePlot.data_file_prev",""); 
 var data_file_prev_label = "";
 if (data_file_prev != "" && File.exists(data_file_prev)){
    data_file_prev_label = "../" + File.getName(data_file_prev);
@@ -140,8 +141,8 @@ var   render_order_list = newArray(                      // rendering order choi
 
 // ----- variables: graph
 
-var canvas_width        =  8192;     // total output width
-var canvas_height       =  4608;     // total output height
+var canvas_width        =  20000;     // total output width
+var canvas_height       =  20000;     // total output height
 var border              =   210;     // space around the graph -- subtracted from canvas to leave draw space
 var image_resize_width  =   100;     // resize width for thumbnails -- 0 or blank is original size
 var point_size          =    64;     // size of points to draw
@@ -192,7 +193,7 @@ var  points_color = newArray(255,255,255);     // RGB color array used to plot p
 var  labels_color = newArray(255,255,255);     // RGB color array used to plot labels
 var   lines_color = newArray(255,255,255);     // RGB color array used to plot lines
 var  frames_color = newArray(192,192,192);     // RGB color array used to frame images
-var fill_bg_color = newArray(100,100,100);     // RGB color array used to determine back ground color
+var fill_bg_color = newArray(70,70,70);     // RGB color array used to determine back ground color
 var      colColor = newArray(255,255,255);     // RGB color array used in column controlling colors
 
 // color strings for GUI
@@ -244,7 +245,7 @@ var     ds = 1;
 
 var image_path_col     =  0;     // data file column index for image paths
 var x_col              =  1;     // data file column index for x axis
-var y_col              =  2;     // data file column index for y axis
+var y_col              =  10;     // data file column index for y axis
 var series_col         =  3;     // data file column index for series ids
 var series_label_col   =  4;     // data file column index for series labels
 
@@ -462,7 +463,7 @@ function draw_graph() {
     // progress bar start time
     for (i = 1; i < lines.length; i++) {
 
-        items = split(lines[i], ",\t");
+        items = split(lines[i], "\t");
         x = parseFloat(items[x_col]);
         y = parseFloat(items[y_col]);
         // if more than 1 ds, find out how many 
@@ -480,11 +481,30 @@ function draw_graph() {
             ymin = y_axis_start;
             ymax = y_axis_end;
         }
+        
+    
+    if(polar_flag == 1){
+      // convert to polar coordinates
+      y = (y-yymin)/(yymax-yymin);
+      
+      var delta = y*360;
+      
+      var theta = delta*(PI/180);
+      
+      var r = (x-xxmin)/(xxmax-xxmin);
+      
+      x = r*cos(theta);
+      y = r*sin(theta);
+    }else{
+      delta = 0;
+    }
+    
+    
+    
         // convert coordinates from data to plot
         ln_origin = split(plot_xy(x, y, ds), "");
         x = ln_origin[0];
         y = ln_origin[1];
-
 
         // draw point
         if (points_flag == 1) {
@@ -559,7 +579,8 @@ function draw_graph() {
         }
 
         // draw image
-        draw_image(x, y, ds);
+        draw_image(x, y, delta, ds);
+        
         if (save_files_flag == 1) {
             selectImage(id_plot);
             // select canvas
@@ -573,7 +594,7 @@ function draw_graph() {
 }
 
 
-function draw_image(x, y, ds) {
+function draw_image(x, y, delta, ds) {
 /**
  * Draws external images if the path is provided.
  *
@@ -598,58 +619,72 @@ function draw_image(x, y, ds) {
         } else {
             image_path = dir + items[image_path_col];
         }
-		
-		if(File.exists(image_path)){
-	        open(image_path);
-	
-	        image_width = getWidth;
-	
-	        // resize if size is specified and image is not already specified width
-	        if (image_resize_width > 0 && image_resize_width != image_width) {
-					    if(images_smoothing_flag){
-								run("Size...", "width=" + image_resize_width + " constrain average interpolation=Bicubic");
-							}else{
-								run("Size...", "width=" + image_resize_width + " constrain interpolation=Bicubic");
-							}
-	            // save resized image thumbnail to thumbnails save path
-	            if (save_thumbs_flag == 1 && File.isDirectory(dir_thumbs)) {
-	                // save as same name and filetype as input (to match data file columns)
-	                saveAs("JPG", dir_thumbs + File.getName(image_path));
-	                // update chosen image thumbs directory to ij.Prefs
-	                call("ij.Prefs.set", "imagePlot.image_dir_prev",toString(dir_thumbs)); 
-	            }
-	        }
-	
-	        image_width = getWidth;
-	        image_height = getHeight;
-	        // copy to memory
-	        run("Copy");
-	        // close the image file
-	        close();
-	        // select graph image
-	        selectImage(id_plot);
-	        // default - plots image at the right coordinate
-	        makeRectangle(x, y, image_width, image_height);
-	        run("Paste");
-	
-	        // draws frames if the flag is on
-	        if (images_frames_flag == 1) {
-	            // use user input color
-	            if (frames_color_choice == "Manual") {
-	                set_color(x, y, ds, frames_color, frames_color_choice);
-	            }
-	            // use columns to determine the frame color
-	            else {
-	                scale_color(frames_color_max);
-	                column_color(frames_channel_choice, frames_scale_choice, frames_color, items[frames_color_col], color_scale);
-	            }
-	            // setLineWidth(frames_width);
-	            drawRect(x, y, image_width, image_height);
-	        }
-		}else{
-			print("File Not Found:");
-			print(image_path);
-		}
+    
+    if(File.exists(image_path)){
+          open(image_path);
+      
+          image_width = getWidth;
+  
+          // resize if size is specified and image is not already specified width
+          if (image_resize_width > 0 && image_resize_width != image_width) {
+              if(images_smoothing_flag){
+                run("Size...", "width=" + image_resize_width + " constrain average interpolation=Bicubic");
+              }else{
+                run("Size...", "width=" + image_resize_width + " constrain interpolation=Bicubic");
+              }
+              // save resized image thumbnail to thumbnails save path
+              if (save_thumbs_flag == 1 && File.isDirectory(dir_thumbs)) {
+                  // save as same name and filetype as input (to match data file columns)
+                  saveAs("JPG", dir_thumbs + File.getName(image_path));
+                  // update chosen image thumbs directory to ij.Prefs
+                  call("ij.Prefs.set", "imagePlot.image_dir_prev",toString(dir_thumbs)); 
+              }
+          }
+      
+      setBackgroundColor(0, 0, 0);
+      
+      if(polar_flag == 1){
+        run("Rotate... ", "angle="+(delta*-1)+" grid=0 interpolation=Bicubic fill enlarge");
+      }
+       
+      
+          image_width = getWidth;
+          image_height = getHeight;
+          
+          
+                
+          
+          
+          // copy to memory
+          run("Copy");
+          // close the image file
+          close();
+          // select graph image
+          selectImage(id_plot);
+          // default - plots image at the right coordinate
+          makeRectangle(x, y, image_width, image_height);
+          run("Paste");
+          setPasteMode("Transparent-zero");
+          
+  
+          // draws frames if the flag is on
+          if (images_frames_flag == 1) {
+              // use user input color
+              if (frames_color_choice == "Manual") {
+                  set_color(x, y, ds, frames_color, frames_color_choice);
+              }
+              // use columns to determine the frame color
+              else {
+                  scale_color(frames_color_max);
+                  column_color(frames_channel_choice, frames_scale_choice, frames_color, items[frames_color_col], color_scale);
+              }
+              // setLineWidth(frames_width);
+              drawRect(x, y, image_width, image_height);
+          }
+    }else{
+      print("File Not Found:");
+      print(image_path);
+    }
     }
 
     if (render_mode == "during rendering") {
@@ -668,7 +703,7 @@ function draw_lines() {
         for (i = 2; i < lines.length; i++) {
 
             // check if the last and current points belong to the same data series
-            items0 = split(lines[i - 1], ",\t");
+            items0 = split(lines[i - 1], "\t");
             x0 = parseFloat(items0[x_col]);
             y0 = parseFloat(items0[y_col]);
 
@@ -678,7 +713,7 @@ function draw_lines() {
             if (mult_series_flag == 1)
             ds0 = parseFloat(items0[series_col]);
 
-            items = split(lines[i], ",\t");
+            items = split(lines[i], "\t");
             x = parseFloat(items[x_col]);
             y = parseFloat(items[y_col]);
             if (mult_series_flag == 1)
@@ -774,13 +809,15 @@ function plot_xy(x, y, ds) {
     plot_width = (canvas_width - (border * 2));
 
     plot_height = (canvas_height - (border * 2)) / dmax;
-
+  
+  
     if (x_fixed_flag == 1) {
         x_values_range = x_axis_end - x_axis_start;
     } else {
         x_values_range = xmax - xmin;
     }
-
+  
+  
     if (y_fixed_flag == 1) {
         y_values_range = y_axis_end - y_axis_start;
     } else {
@@ -833,7 +870,7 @@ function print_variables() {
     print("Plot Images : ", images_flag);
     print("Draw Image Frames : ", images_frames_flag);
     print("Blend Images : ", images_blend_flag);
-		print("Smooth Resize : ", images_smoothing_flag);
+    print("Smooth Resize : ", images_smoothing_flag);
     print("Fixed X Value : ", x_fixed_flag);
     print("Fixed Y Value : ", y_fixed_flag);
     print("Draw values next to dot (XY Value) : ", points_values_flag);
@@ -958,9 +995,10 @@ if (GUI_mode == 1) {
     Dialog.addChoice   ("Images", image_dir_list, image_dir);
     // Dialog.addChoice   ("Render order", render_order_list, render_order);
     Dialog.addChoice   ("Display", render_mode_list, render_mode);
+    Dialog.addCheckbox ("Polar", polar_flag);
     Dialog.addCheckbox ("Save images for animation", save_files_flag);
     Dialog.addCheckbox ("Save thumbnail images", save_thumbs_flag);
-		Dialog.addCheckbox ("Save canvas when done", save_when_done_flag);
+  Dialog.addCheckbox ("Save canvas when done", save_when_done_flag);
     Dialog.addMessage  (" ");
     Dialog.addCheckbox ("Options", config_flag);
 
@@ -968,11 +1006,12 @@ if (GUI_mode == 1) {
 
     data_file = Dialog.getChoice();
     image_dir = Dialog.getChoice();
-    // render_order = Dialog.getChoice();
+    //render_order = Dialog.getChoice();
     render_mode = Dialog.getChoice();
+    polar_flag = Dialog.getCheckbox();
     save_files_flag = Dialog.getCheckbox();
     save_thumbs_flag = Dialog.getCheckbox();
-		save_when_done_flag = Dialog.getCheckbox();
+  save_when_done_flag = Dialog.getCheckbox();
     config_flag = Dialog.getCheckbox();
 
     // choose the data file to open
@@ -996,17 +1035,17 @@ if (GUI_mode == 1) {
     text = File.openAsString(path);
     lines = split(text, "\n");
     //// print("   rows: " + lines.length);
-    items = split(lines[0], ",\t");
-		col_choices_names = newArray(lengthOf(items) + 1);
+    items = split(lines[0], "\t");
+    col_choices_names = newArray(lengthOf(items) + 1);
     col_choices = newArray(lengthOf(items) + 1);
     col_choices_b = newArray(lengthOf(items) + 1);
-		col_choices_names[0] = "None";
+    col_choices_names[0] = "None";
     col_choices[0] = "Manual";
     col_choices_b[0] = "None";
     var uniqueNames = "";
     for (i = 0; i < lengthOf(items); i++) {
         uniqueNames = items[i] + " (Column" + i + ")";
-				col_choices_names[i + 1] = items[i];
+        col_choices_names[i + 1] = items[i];
         col_choices[i + 1] = uniqueNames;
         col_choices_b[i + 1] = uniqueNames;
     }
@@ -1374,8 +1413,8 @@ if (config_flag == 1) {
           Dialog.addChoice   ("Color", newArray("RGB", "8-bit"), canvas_colorspace);
           Dialog.setInsets   (0,114,0);
           Dialog.addCheckbox ("Blend (transparent)", images_blend_flag);
-					Dialog.setInsets   (0,114,0);
-					Dialog.addCheckbox ("Smooth Resize", images_smoothing_flag);
+          Dialog.setInsets   (0,114,0);
+          Dialog.addCheckbox ("Smooth Resize", images_smoothing_flag);
           Dialog.addMessage  (" ");
           Dialog.setInsets   (0,0,0);
           Dialog.addCheckbox ("Image frames", images_frames_flag);
@@ -1392,7 +1431,7 @@ if (config_flag == 1) {
           image_resize_width    = Dialog.getNumber();
           canvas_colorspace     = Dialog.getChoice(); // RGB color image
           images_blend_flag     = Dialog.getCheckbox();
-					images_smoothing_flag = Dialog.getCheckbox();
+          images_smoothing_flag = Dialog.getCheckbox();
           images_frames_flag    = Dialog.getCheckbox();
           frames_width          = Dialog.getNumber();
           //// frames_color_choice   = Dialog.getChoice();
@@ -1523,7 +1562,7 @@ if (columns > 3 && mult_series_flag == 1) { // if data series numbers and labels
   labels_max = 0;
   ds = 0;
   for (i=0; i<lines.length; i++) {
-    items=split(lines[i], ",\t"); // read in data row
+    items=split(lines[i], "\t"); // read in data row
     ds = parseFloat(items[series_col]);      // read data series number (column 3)
     if (ds > dmax)                // if a new data series number is encountered
       dmax = ds;                  // set dmax to this number
@@ -1540,30 +1579,119 @@ if (columns > 3 && mult_series_flag == 1) { // if data series numbers and labels
 
 // max and min values
 // starts at 1 (first line ignored)
-items=split(lines[1], ",\t");
-xmin=parseFloat(items[x_col]);
-xmax=parseFloat(items[x_col]);
-ymin=parseFloat(items[y_col]);
-ymax=parseFloat(items[y_col]);
+items=split(lines[1], "\t");
+if(polar_flag == 1){
+  xmin=0;
+  xmax=0;
+  ymin=0;
+  ymax=0;
+}else{
+  xmin=parseFloat(items[x_col]);
+  xmax=parseFloat(items[x_col]);
+  ymin=parseFloat(items[y_col]);
+  ymax=parseFloat(items[y_col]);
+}
+xxmin=parseFloat(items[x_col]);
+xxmax=parseFloat(items[x_col]);
+yymin=parseFloat(items[y_col]);
+yymax=parseFloat(items[y_col]);
 points_color_max = parseFloat(items[points_color_col]);
 lines_color_max = parseFloat(items[lines_color_col]);
 labels_color_max = parseFloat(items[labels_color_col]);
 frames_color_max = parseFloat(items[frames_color_col]);
 
+if(polar_flag==1){
+  for(i=1; i<lines.length; i++){
+    items=split(lines[i], "\t");
+    yy = parseFloat(items[y_col]);
+    xx = parseFloat(items[x_col]);
+  
+    if (xx>xxmax) xxmax = xx;
+    if (xx<xxmin) xxmin = xx;
+    if (yy>yymax) yymax = yy;
+    if (yy<yymin) yymin = yy;
+    
+  }
+}
+
 for (i=1; i<lines.length; i++) {
-  items=split(lines[i], ",\t");
+  
+  /*
+  print('--------------');
+  print('xmax: ' + xmax);
+  print('xmin: ' + xmin);
+  print('ymax: ' + ymax);
+  print('ymin: ' + ymin);
+  print('--------------');
+  print('xxmax: ' + xxmax);
+  print('xxmin: ' + xxmin);
+  print('yymax: ' + yymax);
+  print('yymin: ' + yymin);
+  */
+  items=split(lines[i], "\t");
   x = parseFloat(items[x_col]);
   y = parseFloat(items[y_col]);
   pts_color = parseFloat(items[points_color_col]);
   lns_color = parseFloat( items[lines_color_col]);
   lbls_color = parseFloat( items[labels_color_col]);
   frms_color = parseFloat( items[frames_color_col]);
+  /*
+  print('--------------');
+  print('x: ' + x);
+  print('y: ' + y);
+  */
+  
+  // convert to polar coordinates
+  if(polar_flag==1){
+    y =(y-yymin)/(yymax-yymin);
+    
+    delta = y*360;
+    theta = delta*(PI/180);
+    r = (x-xxmin)/(xxmax-xxmin);
+    /*
+    print('--------------');
+    print('r: ' + r);
+    print('theta: ' + theta);
+    */
+    x = r*cos(theta);
+    y = r*sin(theta);
+    /*
+    print('--------------');
+    print('x: ' + x);
+    print('y: ' + y);
+    */
+    if(y == -0){
+      y=0;
+    }else if( x == -0){
+      x=0;
+    }
+  }
 
+    
   // finds the max and min value for xy column in order to get axis
   if (x>xmax) xmax = x;
   if (x<xmin) xmin = x;
   if (y>ymax) ymax = y;
   if (y<ymin) ymin = y;
+  
+  if(polar_flag == 1){
+    if (xmax == xmin){
+      xmax = 1;
+      xmin = -1;
+    }
+    if (ymax == ymin){
+      ymax = 1;
+      ymin = -1;
+    }
+  }
+  /*
+  print('--------------');
+  print('xmax: ' + xmax);
+  print('xmin: ' + xmin);
+  print('ymax: ' + ymax);
+  print('ymin: ' + ymin);
+  print('--------------');
+  */
 
   // finds the max values in the color columns in order to scale the color
   if (points_color_max < pts_color) points_color_max = pts_color;
@@ -1573,7 +1701,6 @@ for (i=1; i<lines.length; i++) {
 
 
 }
-
 print("xmax           = "+xmax);
 print("xmin           = "+xmin);
 print("ymax           = "+ymax);
@@ -1635,7 +1762,7 @@ y_scale = plot_height / y_values_range;
   }
 
   //// print("making image "+ canvas_width + " x " + canvas_height);
-	imageName = File.getName(data_file) + " - " + col_choices_names[x_col+1] + " vs " + col_choices_names[y_col+1];
+  imageName = File.getName(data_file) + " - " + col_choices_names[x_col+1] + " vs " + col_choices_names[y_col+1];
   newImage(imageName, ""+canvas_colorspace+" black", canvas_width, canvas_height, 1);
   setColor(fill_bg_color[0], fill_bg_color[1], fill_bg_color[2]);
   fill();
